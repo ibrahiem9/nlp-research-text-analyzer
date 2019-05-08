@@ -1,6 +1,34 @@
 #print('hello')
 
 import spacy
+from spacy.tokens import Span
+import collections
+
+def print_line():
+	print("\n-----------------------------------------------------")
+
+def get_entities():
+	doc = nlp(text)
+
+	print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
+	print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+
+	for entity in doc.ents:
+    print(entity.text, entity.label_)
+
+def get_lpd():
+	doc = nlp(text)
+
+	for token in doc:
+		print("Text: {} | Lemmatization: {} | Part of Speech: {} | Dependency Parsing: {}".format(token.text, token.lemma_, token.pos_, token.dep_))
+
+	print_line()
+
+def most_frequent():
+	doc = nlp(text)
+	words = [token.text for token in doc if token.pos_ != "PUNCT"]
+	print(collections.Counter(words).most_common(10))
+	print_line()
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -11,12 +39,8 @@ text = ("When Sebastian Thrun started working on self-driving cars at "
         "worth talking to,” said Thrun, in an interview with Recode earlier "
         "this week.")
 
-doc = nlp(text)
+get_entities()
+update_entities()
+most_frequent()
 
-# Analyze syntax
-print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
 
-# Find named entities, phrases and concepts
-for entity in doc.ents:
-    print(entity.text, entity.label_)
